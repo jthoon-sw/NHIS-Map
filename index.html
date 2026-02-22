@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>NHIS Suwon Map - 국민건강보험공단</title>
+
+    <!-- PWA & Mobile Optimization Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#005ba3">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --nhis-blue: #005ba3;
+            --nhis-light-blue: #0073cf;
+            --nhis-bg: #eff3f8;
+            --white: #ffffff;
+            --gray-text: #6b7280;
+            --dark-text: #111827;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* Safe area variables */
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            /* Remove default tap highlight */
+            touch-action: manipulation;
+            /* Faster touch response */
+        }
+
+        body {
+            background-color: var(--nhis-bg);
+            color: var(--dark-text);
+            line-height: 1.5;
+            padding-bottom: calc(var(--safe-bottom) + 60px);
+            overflow-x: hidden;
+            -webkit-user-select: none;
+            /* Better mobile app feel */
+            user-select: none;
+        }
+
+        /* Header Style */
+        header {
+            background-color: var(--nhis-blue);
+            color: var(--white);
+            padding: calc(var(--safe-top) + 20px) 20px 20px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 16px auto;
+            padding: 0 16px;
+        }
+
+        /* Card Section */
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .card:active {
+            transform: scale(0.98);
+            background-color: #fcfcfc;
+        }
+
+        .card-header {
+            padding: 24px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--nhis-blue);
+        }
+
+        .card-title i {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .chevron {
+            color: #9ca3af;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .card.active {
+            box-shadow: var(--shadow-md);
+            border-color: var(--nhis-light-blue);
+        }
+
+        .card.active .chevron {
+            transform: rotate(180deg);
+            color: var(--nhis-blue);
+        }
+
+        /* Accordion Content */
+        .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+            background: #fdfdfd;
+        }
+
+        .card.active .card-content {
+            max-height: 600px;
+        }
+
+        .content-inner {
+            padding: 0 20px 24px 20px;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        .address-container {
+            margin-top: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .address-label {
+            font-size: 0.75rem;
+            color: var(--gray-text);
+            margin-bottom: 4px;
+            display: block;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .address-text {
+            font-size: 0.95rem;
+            color: var(--dark-text);
+            font-weight: 500;
+            line-height: 1.4;
+            display: block;
+            margin-bottom: 12px;
+            word-break: keep-all;
+            user-select: text;
+            /* Allow address selection */
+            -webkit-user-select: text;
+        }
+
+        .btn-copy {
+            width: 100%;
+            height: 48px;
+            /* Large touch target */
+            background: var(--nhis-blue);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0, 91, 163, 0.2);
+        }
+
+        .btn-copy:active {
+            background: var(--nhis-light-blue);
+            transform: scale(0.97);
+        }
+
+        /* Navigation Grid */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .nav-button {
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            transition: var(--transition);
+        }
+
+        .nav-button:active {
+            background: #f3f4f6;
+            transform: translateY(2px);
+        }
+
+        .nav-button i {
+            font-size: 1.5rem;
+        }
+
+        .nav-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        /* Map Colors */
+        .naver-color {
+            color: #03cf5d;
+        }
+
+        .kakao-color {
+            color: #ffeb00;
+            text-shadow: 0 0 1px #3c1e1e;
+        }
+
+        .google-color {
+            color: #4285f4;
+        }
+
+        /* Toast UI */
+        #toast {
+            position: fixed;
+            bottom: calc(var(--safe-bottom) + 80px);
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(31, 41, 55, 0.9);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            z-index: 2000;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        #toast.visible {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        footer {
+            padding: 24px;
+            text-align: center;
+            color: var(--gray-text);
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>NHIS Suwon Map</h1>
+        <p>국민건강보험공단 수원 지사 안내</p>
+    </header>
+
+    <main class="container" id="app">
+        <!-- Rendered by JS -->
+    </main>
+
+    <div id="toast">주소가 복사되었습니다</div>
+
+    <footer>
+        &copy; 2024 국민건강보험공단 수원지사<br>
+        모바일 전용 간편 안내 서비스
+    </footer>
+
+    <script>
+        const branches = [
+            {
+                name: "수원동부지사",
+                full_name: "국민건강보험공단 수원동부지사",
+                address: "경기도 수원시 팔달구 권광로 178 (한국교직원공제회빌딩)",
+                naver: "https://map.naver.com/v5/search/국민건강보험공단 수원동부지사",
+                kakao: "https://map.kakao.com/link/search/국민건강보험공단 수원동부지사",
+                google: "https://www.google.com/maps/search/국민건강보험공단 수원동부지사"
+            },
+            {
+                name: "수원서부지사",
+                full_name: "국민건강보험공단 수원서부지사",
+                address: "경기도 수원시 권선구 호매실로 46-16 (경기종합노동복지회관)",
+                naver: "https://map.naver.com/v5/search/국민건강보험공단 수원서부지사",
+                kakao: "https://map.kakao.com/link/search/국민건강보험공단 수원서부지사",
+                google: "https://www.google.com/maps/search/국민건강보험공단 수원서부지사"
+            },
+            {
+                name: "수원외국인민원센터",
+                full_name: "국민건강보험공단 수원외국인민원센터",
+                address: "경기도 수원시 팔달구 효원로 119 (청궁빌딩 1층)",
+                naver: "https://map.naver.com/v5/search/국민건강보험공단 수원외국인민원센터",
+                kakao: "https://map.kakao.com/link/search/국민건강보험공단 수원외국인민원센터",
+                google: "https://www.google.com/maps/search/국민건강보험공단 수원외국인민원센터"
+            }
+        ];
+
+        function render() {
+            const container = document.getElementById('app');
+            container.innerHTML = branches.map((b, i) => `
+            <div class="card" id="card-${i}">
+                <div class="card-header" onclick="toggle(${i})">
+                    <div class="card-title">
+                        <i class="fas fa-building-ngo"></i>
+                        <span>${b.name}</span>
+                    </div>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="address-container">
+                            <span class="address-label">상세 주소</span>
+                            <span class="address-text">${b.address}</span>
+                            <button class="btn-copy" onclick="copy('${b.address}')">
+                                <i class="far fa-copy"></i> 주소 복사하기
+                            </button>
+                        </div>
+                        <div class="nav-grid">
+                            <a href="${b.naver}" target="_blank" class="nav-button">
+                                <i class="fas fa-map-marker-alt naver-color"></i>
+                                <span class="nav-name">네이버</span>
+                            </a>
+                            <a href="${b.kakao}" target="_blank" class="nav-button">
+                                <i class="fas fa-comment kakao-color"></i>
+                                <span class="nav-name">카카오</span>
+                            </a>
+                            <a href="${b.google}" target="_blank" class="nav-button">
+                                <i class="fab fa-google google-color"></i>
+                                <span class="nav-name">구글맵</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        }
+
+        function toggle(index) {
+            const target = document.getElementById(`card-${index}`);
+            const wasActive = target.classList.contains('active');
+
+            // Close others
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+
+            if (!wasActive) {
+                target.classList.add('active');
+                // Scroll into view if needed
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 350);
+            }
+        }
+
+        function copy(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(showToast);
+            } else {
+                // Fallback
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast();
+                } catch (err) { }
+                document.body.removeChild(textArea);
+            }
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 2000);
+
+            // Simple haptic feedback if available
+            if (window.navigator.vibrate) {
+                window.navigator.vibrate(50);
+            }
+        }
+
+        render();
+    </script>
+
+</body>
+
+</html>
