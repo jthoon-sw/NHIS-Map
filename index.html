@@ -174,8 +174,26 @@
             margin-top: 20px;
             background: #fbfbfc;
             border-radius: 12px;
-            padding: 16px;
+            overflow: hidden;
             border: 1px solid #eff0f2;
+        }
+
+        .map-wrapper {
+            width: 100%;
+            height: 200px;
+            background: #eee;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .address-details {
+            padding: 16px;
         }
 
         .address-label {
@@ -348,17 +366,26 @@
             {
                 name: "수원동부지사",
                 address: "경기도 수원시 팔달구 권광로 178 (한국교직원공제회빌딩 8, 10, 12층)",
-                search_name: "국민건강보험공단 수원동부지사"
+                search_name: "국민건강보험공단 수원동부지사",
+                id: "13397279",
+                lat: "37.2632056",
+                lng: "127.0328655"
             },
             {
                 name: "수원서부지사",
                 address: "경기도 수원시 권선구 호매실로 46-16 (경기종합노동복지회관 본관 6층, 신관 1층)",
-                search_name: "국민건강보험공단 수원서부지사"
+                search_name: "국민건강보험공단 수원서부지사",
+                id: "12023537",
+                lat: "37.2955356",
+                lng: "126.9996451"
             },
             {
                 name: "수원외국인민원센터",
                 address: "경기도 수원시 팔달구 효원로 119 (청궁빌딩 1층)",
-                search_name: "국민건강보험공단 수원외국인민원센터"
+                search_name: "국민건강보험공단 수원외국인민원센터",
+                id: "1333734006",
+                lat: "37.2660038",
+                lng: "127.0150220"
             }
         ];
 
@@ -376,25 +403,34 @@
                 <div class="card-content">
                     <div class="content-inner">
                         <div class="address-container">
-                            <span class="address-label">상세 주소</span>
-                            <span class="address-text">${b.address}</span>
-                            <button class="btn-copy" onclick="copy('${b.address}')">
-                                <i class="far fa-copy"></i> 주소 복사하기
-                            </button>
+                            <div class="map-wrapper">
+                                <iframe 
+                                    class="map-iframe" 
+                                    src="https://m.map.naver.com/menu/location.naver?lat=${b.lat}&lng=${b.lng}&title=${encodeURIComponent(b.name)}&pinId=${b.id}&pinType=SITE" 
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                            <div class="address-details">
+                                <span class="address-label">상세 주소</span>
+                                <span class="address-text">${b.address}</span>
+                                <button class="btn-copy" onclick="copy('${b.address}')">
+                                    <i class="far fa-copy"></i> 주소 복사하기
+                                </button>
+                            </div>
                         </div>
                         <div class="nav-grid">
-                            <div onclick="openApp('tmap://search?name=${encodeURIComponent(b.search_name)}')" class="nav-button">
+                            <a href="tmap://search?name=${encodeURIComponent(b.search_name)}" class="nav-button">
                                 <i class="fas fa-location-arrow" style="color: #ed1c24; font-size: 1.6rem;"></i>
                                 <span class="nav-name">티맵</span>
-                            </div>
-                            <div onclick="openApp('kakaonavi://search?q=${encodeURIComponent(b.search_name)}')" class="nav-button">
+                            </a>
+                            <a href="kakaonavi://search?q=${encodeURIComponent(b.search_name)}" class="nav-button">
                                 <i class="fas fa-compass" style="color: #ffcd00; font-size: 1.6rem;"></i>
                                 <span class="nav-name">카카오내비</span>
-                            </div>
-                            <div onclick="openApp('nmap://search?query=${encodeURIComponent(b.search_name)}&appname=com.nhis.suwon')" class="nav-button">
+                            </a>
+                            <a href="nmap://search?query=${encodeURIComponent(b.search_name)}&appname=com.nhis.suwon" class="nav-button">
                                 <i class="fas fa-map-marked-alt" style="color: #03cf5d; font-size: 1.6rem;"></i>
                                 <span class="nav-name">네이버지도</span>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -432,42 +468,21 @@
             };
 
             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(() => showToast("주소가 복사되었습니다")).catch(() => fallbackCopy(text));
+                navigator.clipboard.writeText(text).then(showToast).catch(() => fallbackCopy(text));
             } else {
                 fallbackCopy(text);
             }
         }
 
-        function openApp(url) {
-            const start = Date.now();
-            let clicked = false;
-
-            // Try to open the app
-            window.location.href = url;
-
-            // Check if the page is hidden (app opened)
-            const check = setTimeout(() => {
-                if (!clicked && Date.now() - start < 2000) {
-                    showToast("해당 앱이 설치되어 있지 않습니다");
-                }
-            }, 1500);
-
-            window.onblur = () => {
-                clicked = true;
-                clearTimeout(check);
-            };
-        }
-
-        function showToast(msg) {
+        function showToast() {
             const toast = document.getElementById('toast');
-            toast.innerText = msg;
             toast.style.display = 'block';
             setTimeout(() => toast.classList.add('visible'), 10);
 
             setTimeout(() => {
                 toast.classList.remove('visible');
                 setTimeout(() => { toast.style.display = 'none'; }, 400);
-            }, 2500);
+            }, 2000);
 
             if (window.navigator.vibrate) window.navigator.vibrate(50);
         }
