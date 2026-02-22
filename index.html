@@ -180,16 +180,21 @@
 
         .map-wrapper {
             width: 100%;
-            height: 200px;
+            height: auto;
+            min-height: 200px;
             background: #eee;
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .map-iframe {
+        .map-img {
             width: 100%;
-            height: 100%;
-            border: none;
+            height: auto;
+            display: block;
+            object-fit: cover;
         }
 
         .address-details {
@@ -369,7 +374,8 @@
                 search_name: "국민건강보험공단 수원동부지사",
                 id: "13397279",
                 lat: "37.266205",
-                lng: "127.027045"
+                lng: "127.027045",
+                map_img: "수원동부지사.JPG"
             },
             {
                 name: "수원서부지사",
@@ -377,7 +383,8 @@
                 search_name: "국민건강보험공단 수원서부지사",
                 id: "12023537",
                 lat: "37.25673",
-                lng: "126.96905"
+                lng: "126.96905",
+                map_img: "수원서부지사.JPG"
             },
             {
                 name: "수원외국인민원센터",
@@ -385,7 +392,8 @@
                 search_name: "국민건강보험공단 수원외국인민원센터",
                 id: "1333734006",
                 lat: "37.2660038",
-                lng: "127.0150220"
+                lng: "127.0150220",
+                map_img: "수원외국인민원센터.JPG"
             }
         ];
 
@@ -404,11 +412,7 @@
                     <div class="content-inner">
                         <div class="address-container">
                             <div class="map-wrapper">
-                                <iframe 
-                                    class="map-iframe" 
-                                    src="https://maps.google.com/maps?q=${b.lat},${b.lng}&hl=ko&z=16&ie=UTF8&iwloc=&output=embed" 
-                                    allowfullscreen>
-                                </iframe>
+                                <img src="${b.map_img}" alt="${b.name} 지도" class="map-img" onerror="this.src='https://via.placeholder.com/400x200?text=Map+Not+Found'">
                             </div>
                             <div class="address-details">
                                 <span class="address-label">상세 주소</span>
