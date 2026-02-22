@@ -279,6 +279,7 @@
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
             display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         #toast.visible {
@@ -382,18 +383,18 @@
                             </button>
                         </div>
                         <div class="nav-grid">
-                            <a href="tmap://search?name=${encodeURIComponent(b.search_name)}" class="nav-button">
+                            <div onclick="openApp('tmap://search?name=${encodeURIComponent(b.search_name)}')" class="nav-button">
                                 <i class="fas fa-location-arrow" style="color: #ed1c24; font-size: 1.6rem;"></i>
                                 <span class="nav-name">티맵</span>
-                            </a>
-                            <a href="kakaonavi://search?q=${encodeURIComponent(b.search_name)}" class="nav-button">
+                            </div>
+                            <div onclick="openApp('kakaonavi://search?q=${encodeURIComponent(b.search_name)}')" class="nav-button">
                                 <i class="fas fa-compass" style="color: #ffcd00; font-size: 1.6rem;"></i>
                                 <span class="nav-name">카카오내비</span>
-                            </a>
-                            <a href="nmap://search?query=${encodeURIComponent(b.search_name)}&appname=com.nhis.suwon" class="nav-button">
+                            </div>
+                            <div onclick="openApp('nmap://search?query=${encodeURIComponent(b.search_name)}&appname=com.nhis.suwon')" class="nav-button">
                                 <i class="fas fa-map-marked-alt" style="color: #03cf5d; font-size: 1.6rem;"></i>
                                 <span class="nav-name">네이버지도</span>
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -426,26 +427,47 @@
                 textArea.value = val;
                 document.body.appendChild(textArea);
                 textArea.select();
-                try { document.execCommand('copy'); showToast(); } catch (err) { }
+                try { document.execCommand('copy'); showToast("주소가 복사되었습니다"); } catch (err) { }
                 document.body.removeChild(textArea);
             };
 
             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(showToast).catch(() => fallbackCopy(text));
+                navigator.clipboard.writeText(text).then(() => showToast("주소가 복사되었습니다")).catch(() => fallbackCopy(text));
             } else {
                 fallbackCopy(text);
             }
         }
 
-        function showToast() {
+        function openApp(url) {
+            const start = Date.now();
+            let clicked = false;
+
+            // Try to open the app
+            window.location.href = url;
+
+            // Check if the page is hidden (app opened)
+            const check = setTimeout(() => {
+                if (!clicked && Date.now() - start < 2000) {
+                    showToast("해당 앱이 설치되어 있지 않습니다");
+                }
+            }, 1500);
+
+            window.onblur = () => {
+                clicked = true;
+                clearTimeout(check);
+            };
+        }
+
+        function showToast(msg) {
             const toast = document.getElementById('toast');
+            toast.innerText = msg;
             toast.style.display = 'block';
             setTimeout(() => toast.classList.add('visible'), 10);
 
             setTimeout(() => {
                 toast.classList.remove('visible');
                 setTimeout(() => { toast.style.display = 'none'; }, 400);
-            }, 2200);
+            }, 2500);
 
             if (window.navigator.vibrate) window.navigator.vibrate(50);
         }
