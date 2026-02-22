@@ -201,44 +201,6 @@
             padding: 16px;
         }
 
-        .branch-info-grid {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #eff0f2;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .info-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .info-icon {
-            width: 20px;
-            color: var(--nhis-gray);
-            font-size: 0.9rem;
-            display: flex;
-            justify-content: center;
-            padding-top: 3px;
-        }
-
-        .info-label {
-            width: 90px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #333;
-            flex-shrink: 0;
-        }
-
-        .info-value {
-            font-size: 0.85rem;
-            color: #555;
-            line-height: 1.4;
-        }
-
         .address-label {
             font-size: 0.75rem;
             color: var(--nhis-gray);
@@ -409,30 +371,21 @@
         const branches = [
             {
                 name: "수원동부지사",
-                address: "경기도 수원시 팔달구 권광로 178 (한국교직원공제회빌딩 8, 10, 12층)",
+                address: "경기도 수원시 팔달구 권광로 178<br>(한국교직원공제회빌딩 8, 10, 12층)",
                 search_name: "국민건강보험공단 수원동부지사",
-                map_img: "수원동부지사.JPG",
-                jurisdiction: "수원시 팔달구, 영통구",
-                disability: "장애인 주차장",
-                parking: "주차 공간 협소(대중교통 권장)"
+                map_img: "수원동부지사.JPG"
             },
             {
                 name: "수원서부지사",
-                address: "경기도 수원시 권선구 호매실로 46-16 (경기종합노동복지회관 본관 6층, 신관 1층)",
+                address: "경기도 수원시 권선구 호매실로 46-16<br>(경기종합노동복지회관 본관 6층, 신관 1층)",
                 search_name: "국민건강보험공단 수원서부지사",
-                map_img: "수원서부지사.JPG",
-                jurisdiction: "수원시 권선구, 장안구",
-                disability: "장애인 주차장",
-                parking: "주차 공간 여유"
+                map_img: "수원서부지사.JPG"
             },
             {
                 name: "수원외국인민원센터",
-                address: "경기도 수원시 팔달구 효원로 119 (청궁빌딩 1층)",
+                address: "경기도 수원시 팔달구 효원로 119<br>(청궁빌딩 1층)",
                 search_name: "국민건강보험공단 수원외국인민원센터",
-                map_img: "수원외국인민원센터.JPG",
-                jurisdiction: "수원, 용인, 화성, 오산 거주 외국인 등",
-                disability: "장애인 주차장, 핸드레일, 점자블록 등",
-                parking: "주차 공간 협소 (대중교통 권장)"
+                map_img: "수원외국인민원센터.JPG"
             }
         ];
 
@@ -453,31 +406,13 @@
                             <div class="map-wrapper">
                                 <img src="${b.map_img}" alt="${b.name} 지도" class="map-img" onerror="this.src='https://via.placeholder.com/400x200?text=Map+Not+Found'">
                             </div>
-                            <div class="address-details">
-                                <span class="address-label">상세 주소</span>
-                                <span class="address-text">${b.address}</span>
-                                <button class="btn-copy" onclick="copy('${b.address}')">
-                                    <i class="far fa-copy"></i> 주소 복사하기
-                                </button>
-
-                                <div class="branch-info-grid">
-                                    <div class="info-row">
-                                        <div class="info-icon"><i class="fas fa-star-of-life"></i></div>
-                                        <div class="info-label">지사관할</div>
-                                        <div class="info-value">${b.jurisdiction}</div>
-                                    </div>
-                                    <div class="info-row">
-                                        <div class="info-icon"><i class="fas fa-wheelchair"></i></div>
-                                        <div class="info-label">장애인시설</div>
-                                        <div class="info-value">${b.disability}</div>
-                                    </div>
-                                    <div class="info-row">
-                                        <div class="info-icon"><i class="fas fa-parking"></i></div>
-                                        <div class="info-label">주차시설</div>
-                                        <div class="info-value">${b.parking}</div>
-                                    </div>
+                                <div class="address-details">
+                                    <span class="address-label">상세 주소</span>
+                                    <span class="address-text">${b.address}</span>
+                                    <button class="btn-copy" onclick="copy('${b.address}')">
+                                        <i class="far fa-copy"></i> 주소 복사하기
+                                    </button>
                                 </div>
-                            </div>
                         </div>
                         <div class="nav-grid">
                             <a href="tmap://search?name=${encodeURIComponent(b.search_name)}" class="nav-button">
