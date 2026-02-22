@@ -9,8 +9,8 @@
 
     <!-- PWA & Mobile Optimization Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#005ba3">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#ffffff">
     <meta name="format-detection" content="telephone=no">
 
     <!-- Font Awesome for Icons -->
@@ -21,15 +21,15 @@
 
     <style>
         :root {
+            --nhis-red: #e30613;
             --nhis-blue: #005ba3;
-            --nhis-light-blue: #0073cf;
-            --nhis-bg: #eff3f8;
+            --nhis-gray: #767676;
+            --nhis-bg: #f8f9fa;
             --white: #ffffff;
-            --gray-text: #6b7280;
-            --dark-text: #111827;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-color: #e5e7eb;
+            --dark-text: #222222;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
             /* Safe area variables */
             --safe-top: env(safe-area-inset-top, 0px);
@@ -42,66 +42,81 @@
             box-sizing: border-box;
             font-family: 'Noto Sans KR', sans-serif;
             -webkit-tap-highlight-color: transparent;
-            /* Remove default tap highlight */
             touch-action: manipulation;
-            /* Faster touch response */
         }
 
         body {
             background-color: var(--nhis-bg);
             color: var(--dark-text);
-            line-height: 1.5;
-            padding-bottom: calc(var(--safe-bottom) + 60px);
+            line-height: 1.6;
+            padding-bottom: calc(var(--safe-bottom) + 80px);
             overflow-x: hidden;
             -webkit-user-select: none;
-            /* Better mobile app feel */
             user-select: none;
         }
 
-        /* Header Style */
+        /* Header Style (White Theme like Official Site) */
         header {
-            background-color: var(--nhis-blue);
-            color: var(--white);
-            padding: calc(var(--safe-top) + 20px) 20px 20px 20px;
-            text-align: center;
-            box-shadow: var(--shadow-md);
+            background-color: var(--white);
+            color: var(--dark-text);
+            padding: calc(var(--safe-top) + 12px) 20px 12px 20px;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
+        .header-content {
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ci-logo {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+        }
+
         header h1 {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 700;
+            color: #333;
             letter-spacing: -0.5px;
         }
 
         header p {
-            font-size: 0.85rem;
-            opacity: 0.8;
-            margin-top: 4px;
+            font-size: 0.75rem;
+            color: var(--nhis-gray);
+            font-weight: 400;
         }
 
         .container {
             max-width: 500px;
-            margin: 16px auto;
+            margin: 20px auto;
             padding: 0 16px;
         }
 
-        /* Card Section */
+        /* Card Section (Official Style) */
         .card {
             background: var(--white);
-            border-radius: 16px;
-            margin-bottom: 16px;
+            border-radius: 20px;
+            margin-bottom: 20px;
             overflow: hidden;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow);
             transition: var(--transition);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            border: 1px solid transparent;
         }
 
         .card:active {
-            transform: scale(0.98);
-            background-color: #fcfcfc;
+            transform: scale(0.985);
         }
 
         .card-header {
@@ -117,99 +132,94 @@
             align-items: center;
             gap: 12px;
             font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--nhis-blue);
+            font-weight: 700;
+            color: #111;
         }
 
         .card-title i {
+            color: var(--nhis-red);
             font-size: 1.2rem;
-            opacity: 0.9;
         }
 
         .chevron {
-            color: #9ca3af;
-            font-size: 1rem;
+            color: #ccc;
+            font-size: 0.9rem;
             transition: var(--transition);
         }
 
         .card.active {
-            box-shadow: var(--shadow-md);
-            border-color: var(--nhis-light-blue);
+            border-color: var(--nhis-red);
         }
 
         .card.active .chevron {
             transform: rotate(180deg);
-            color: var(--nhis-blue);
+            color: var(--nhis-red);
         }
 
         /* Accordion Content */
         .card-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-in-out;
-            background: #fdfdfd;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .card.active .card-content {
-            max-height: 600px;
+            max-height: 500px;
         }
 
         .content-inner {
             padding: 0 20px 24px 20px;
-            border-top: 1px solid #f3f4f6;
+            border-top: 1px solid #f0f0f0;
         }
 
         .address-container {
             margin-top: 20px;
-            background: #f8fafc;
+            background: #fbfbfc;
             border-radius: 12px;
             padding: 16px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #eff0f2;
         }
 
         .address-label {
             font-size: 0.75rem;
-            color: var(--gray-text);
-            margin-bottom: 4px;
+            color: var(--nhis-gray);
+            margin-bottom: 6px;
             display: block;
-            text-transform: uppercase;
-            font-weight: 700;
+            font-weight: 500;
         }
 
         .address-text {
             font-size: 0.95rem;
-            color: var(--dark-text);
+            color: #333;
             font-weight: 500;
-            line-height: 1.4;
+            line-height: 1.5;
             display: block;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             word-break: keep-all;
             user-select: text;
-            /* Allow address selection */
             -webkit-user-select: text;
         }
 
         .btn-copy {
             width: 100%;
-            height: 48px;
-            /* Large touch target */
-            background: var(--nhis-blue);
+            height: 50px;
+            background: var(--nhis-red);
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             cursor: pointer;
             transition: var(--transition);
-            box-shadow: 0 2px 4px rgba(0, 91, 163, 0.2);
+            box-shadow: 0 4px 12px rgba(227, 6, 19, 0.15);
         }
 
         .btn-copy:active {
-            background: var(--nhis-light-blue);
+            filter: brightness(0.9);
             transform: scale(0.97);
         }
 
@@ -222,32 +232,31 @@
         }
 
         .nav-button {
-            height: 80px;
+            height: 84px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             text-decoration: none;
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #e5e7eb;
+            background: #f8f9fa;
+            border-radius: 16px;
             transition: var(--transition);
         }
 
         .nav-button:active {
-            background: #f3f4f6;
+            background: #f1f3f5;
             transform: translateY(2px);
         }
 
         .nav-button i {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
         }
 
         .nav-name {
             font-size: 0.8rem;
             font-weight: 600;
-            color: var(--dark-text);
+            color: #444;
         }
 
         /* Map Colors */
@@ -256,8 +265,8 @@
         }
 
         .kakao-color {
-            color: #ffeb00;
-            text-shadow: 0 0 1px #3c1e1e;
+            color: #fee500;
+            filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.1));
         }
 
         .google-color {
@@ -267,19 +276,19 @@
         /* Toast UI */
         #toast {
             position: fixed;
-            bottom: calc(var(--safe-bottom) + 80px);
+            bottom: calc(var(--safe-bottom) + 100px);
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: rgba(31, 41, 55, 0.9);
+            background: rgba(34, 34, 34, 0.9);
             color: white;
-            padding: 12px 24px;
-            border-radius: 30px;
+            padding: 14px 28px;
+            border-radius: 50px;
             font-size: 0.9rem;
             font-weight: 500;
             z-index: 2000;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
-            white-space: nowrap;
+            display: none;
         }
 
         #toast.visible {
@@ -287,40 +296,38 @@
         }
 
         footer {
-            padding: 24px;
+            padding: 30px 20px;
             text-align: center;
-            color: var(--gray-text);
-            font-size: 0.75rem;
-            opacity: 0.7;
+            color: #999;
+            font-size: 0.8rem;
+            background: #f4f4f4;
+            margin-top: 20px;
         }
 
-        /* Animation */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
+        /* Entry Animation like Official App */
+        .card {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: slideUp 0.5s ease-out forwards;
+        }
 
+        @keyframes slideUp {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        .card {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-
         .card:nth-child(1) {
-            animation-delay: 0.1s;
+            animation-delay: 0.05s;
         }
 
         .card:nth-child(2) {
-            animation-delay: 0.2s;
+            animation-delay: 0.15s;
         }
 
         .card:nth-child(3) {
-            animation-delay: 0.3s;
+            animation-delay: 0.25s;
         }
     </style>
 </head>
@@ -328,8 +335,13 @@
 <body>
 
     <header>
-        <h1>NHIS Suwon Map</h1>
-        <p>국민건강보험공단 수원 지사 안내</p>
+        <div class="header-content">
+            <img src="logo.png" alt="NHIS Logo" class="ci-logo" onerror="this.style.visibility='hidden'">
+            <div class="header-text">
+                <h1>NHIS Suwon Map</h1>
+                <p>국민건강보험공단 수원 지사 안내</p>
+            </div>
+        </div>
     </header>
 
     <main class="container" id="app">
@@ -339,8 +351,7 @@
     <div id="toast">주소가 복사되었습니다</div>
 
     <footer>
-        &copy; 2024 국민건강보험공단 수원지사<br>
-        모바일 전용 간편 안내 서비스
+        &copy; 2026 국민건강보험공단 수원 안내 서비스
     </footer>
 
     <script>
@@ -377,7 +388,7 @@
             <div class="card" id="card-${i}">
                 <div class="card-header" onclick="toggle(${i})">
                     <div class="card-title">
-                        <i class="fas fa-building-ngo"></i>
+                        <i class="fas fa-heart"></i>
                         <span>${b.name}</span>
                     </div>
                     <i class="fas fa-chevron-down chevron"></i>
@@ -415,44 +426,49 @@
             const target = document.getElementById(`card-${index}`);
             const wasActive = target.classList.contains('active');
 
-            // Close others
             document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
 
             if (!wasActive) {
                 target.classList.add('active');
-                // Scroll into view if needed
                 setTimeout(() => {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }, 350);
+                    const rect = target.getBoundingClientRect();
+                    const offset = 80; // Header height
+                    window.scrollTo({
+                        top: window.pageYOffset + rect.top - offset,
+                        behavior: 'smooth'
+                    });
+                }, 300);
             }
         }
 
         function copy(text) {
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(showToast);
-            } else {
-                // Fallback
+            const fallbackCopy = (val) => {
                 const textArea = document.createElement("textarea");
-                textArea.value = text;
+                textArea.value = val;
                 document.body.appendChild(textArea);
                 textArea.select();
-                try {
-                    document.execCommand('copy');
-                    showToast();
-                } catch (err) { }
+                try { document.execCommand('copy'); showToast(); } catch (err) { }
                 document.body.removeChild(textArea);
+            };
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(showToast).catch(() => fallbackCopy(text));
+            } else {
+                fallbackCopy(text);
             }
         }
 
         function showToast() {
             const toast = document.getElementById('toast');
-            toast.classList.add('visible');
-            setTimeout(() => toast.classList.remove('visible'), 2000);
+            toast.style.display = 'block';
+            setTimeout(() => toast.classList.add('visible'), 10);
 
-            // Simple haptic feedback if available
-            if (window.navigator.vibrate) {
-                window.navigator.vibrate(50);
-            }
+            setTimeout(() => {
+                toast.classList.remove('visible');
+                setTimeout(() => { toast.style.display = 'none'; }, 400);
+            }, 2200);
+
+            if (window.navigator.vibrate) window.navigator.vibrate(50);
         }
 
         render();
