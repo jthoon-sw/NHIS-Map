@@ -376,8 +376,8 @@
                 address: "경기도 수원시 권선구 호매실로 46-16 (경기종합노동복지회관 본관 6층, 신관 1층)",
                 search_name: "국민건강보험공단 수원서부지사",
                 id: "12023537",
-                lat: "37.2955356",
-                lng: "126.9996451"
+                lat: "37.25673",
+                lng: "126.96905"
             },
             {
                 name: "수원외국인민원센터",
@@ -406,7 +406,7 @@
                             <div class="map-wrapper">
                                 <iframe 
                                     class="map-iframe" 
-                                    src="https://maps.google.com/maps?q=${b.lat},${b.lng}&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+                                    src="https://maps.google.com/maps?q=${encodeURIComponent(b.search_name)}&t=&z=16&ie=UTF8&iwloc=&output=embed" 
                                     allowfullscreen>
                                 </iframe>
                             </div>
