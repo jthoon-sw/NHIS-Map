@@ -505,19 +505,22 @@
         }
 
         function copy(text) {
+            // HTML 태그 제거 (예: <br> -> 공백)
+            const cleanText = text.replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]*>?/gm, '');
+
             const fallbackCopy = (val) => {
                 const textArea = document.createElement("textarea");
                 textArea.value = val;
                 document.body.appendChild(textArea);
                 textArea.select();
-                try { document.execCommand('copy'); showToast("주소가 복사되었습니다"); } catch (err) { }
+                try { document.execCommand('copy'); showToast(); } catch (err) { }
                 document.body.removeChild(textArea);
             };
 
             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(showToast).catch(() => fallbackCopy(text));
+                navigator.clipboard.writeText(cleanText).then(showToast).catch(() => fallbackCopy(cleanText));
             } else {
-                fallbackCopy(text);
+                fallbackCopy(cleanText);
             }
         }
 
