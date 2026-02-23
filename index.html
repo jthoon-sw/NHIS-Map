@@ -71,7 +71,37 @@
             margin: 0 auto;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 12px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chatbot-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            text-decoration: none;
+            color: var(--nhis-red);
+            transition: var(--transition);
+        }
+
+        .chatbot-btn:active {
+            transform: scale(0.9);
+        }
+
+        .chatbot-btn i {
+            font-size: 1.4rem;
+        }
+
+        .chatbot-btn span {
+            font-size: 0.65rem;
+            font-weight: 700;
         }
 
         .ci-logo {
@@ -355,10 +385,16 @@
 
     <header>
         <div class="header-content">
-            <img src="logo.png" alt="NHIS Logo" class="ci-logo" onerror="this.style.visibility='hidden'">
-            <div class="header-text">
-                <h1>NHIS Suwon Map</h1>
+            <div class="header-left">
+                <img src="logo.png" alt="NHIS Logo" class="ci-logo" onerror="this.style.visibility='hidden'">
+                <div class="header-text">
+                    <h1>NHIS Suwon Map</h1>
+                </div>
             </div>
+            <a href="https://chatbot.nhis.or.kr/api/" target="_blank" class="chatbot-btn">
+                <i class="fas fa-comment-dots"></i>
+                <span>Chatbot</span>
+            </a>
         </div>
     </header>
 
